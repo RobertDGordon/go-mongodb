@@ -7,9 +7,6 @@ import (
 	"os"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -123,6 +120,48 @@ func LoadEnv(key string) string {
 // 	fmt.Println(episodesSorted)
 // }
 
+// Update and Delete operations
+// func UpdateDelete() {
+// 	// ** Update documents by id
+// 	id, _ := primitive.ObjectIDFromHex("5fa0fd1b444827cf354d8973")
+
+// 	result, err := podcastsCollection.UpdateOne(
+// 		ctx,
+// 		bson.M{"_id": id},
+// 		bson.D{
+// 			{"$set", bson.D{{"author", "That Guy"}}},
+// 		},
+// 	)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
+
+// 	// ** Update documents by filter match
+// 	results, err := podcastsCollection.UpdateMany(
+// 		ctx,
+// 		bson.M{"title": "Some MongoDB Podcast"},
+// 		bson.D{
+// 			{"$set", bson.D{{"author", "Dude"}}},
+// 		},
+// 	)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	fmt.Printf("Updated %v Documents!\n", results.ModifiedCount)
+
+// 	// ** Replace by filter
+// 	resultReplace, err := podcastsCollection.ReplaceOne(
+// 		ctx,
+// 		bson.M{"author": "Dude"},
+// 		bson.M{
+// 			"title":  "The Updated Podcast",
+// 			"author": "Some Dude",
+// 		},
+// 	)
+// 	fmt.Printf("Updated %v Documents!\n", resultReplace.ModifiedCount)
+// }
+
 func main() {
 	fmt.Println("Starting server...")
 
@@ -160,45 +199,7 @@ func main() {
 
 	//Establishing handles
 	quickstartDatabase := client.Database("quickstart")
-	podcastsCollection := quickstartDatabase.Collection("podcasts")
+	// podcastsCollection := quickstartDatabase.Collection("podcasts")
 	// episodesCollection := quickstartDatabase.Collection("episodes")
 
-	// ** Update documents by id
-	id, _ := primitive.ObjectIDFromHex("5fa0fd1b444827cf354d8973")
-
-	result, err := podcastsCollection.UpdateOne(
-		ctx,
-		bson.M{"_id": id},
-		bson.D{
-			{"$set", bson.D{{"author", "That Guy"}}},
-		},
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
-
-	// ** Update documents by filter match
-	results, err := podcastsCollection.UpdateMany(
-		ctx,
-		bson.M{"title": "Some MongoDB Podcast"},
-		bson.D{
-			{"$set", bson.D{{"author", "Dude"}}},
-		},
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Updated %v Documents!\n", results.ModifiedCount)
-
-	// ** Replace by filter
-	resultReplace, err := podcastsCollection.ReplaceOne(
-		ctx,
-		bson.M{"author": "Dude"},
-		bson.M{
-			"title":  "The Updated Podcast",
-			"author": "Some Dude",
-		},
-	)
-	fmt.Printf("Updated %v Documents!\n", resultReplace.ModifiedCount)
 }
