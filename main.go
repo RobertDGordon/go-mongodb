@@ -25,6 +25,41 @@ func LoadEnv(key string) string {
 	return os.Getenv(key)
 }
 
+// Insert documents code
+// func InsertDocuments(client, ctx) {
+
+// 	//Insert document to podcasts Collection
+// 	podcastResult, err := podcastsCollection.InsertOne(ctx, bson.D{
+// 		{Key: "title", Value: "Some MongoDB Podcast"},
+// 		{Key: "author", Value: "This Guy"},
+// 		{Key: "tags", Value: bson.A{"development", "programming", "coding"}},
+// 	})
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	fmt.Println(podcastResult.InsertedID)
+
+// 	//Insert multiple documents
+// 	episodeResult, err := episodesCollection.InsertMany(ctx, []interface{}{
+// 		bson.D{
+// 			{"podcast", podcastResult.InsertedID},
+// 			{"title", "Episode 1"},
+// 			{"description", "The first ep."},
+// 			{"duration", 25},
+// 		},
+// 		bson.D{
+// 			{"podcast", podcastResult.InsertedID},
+// 			{"title", "Episode 2"},
+// 			{"description", "The second ep."},
+// 			{"duration", 30},
+// 		},
+// 	})
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	fmt.Println(episodeResult.InsertedIDs)
+// }
+
 func main() {
 	fmt.Println("Starting server...")
 
@@ -51,7 +86,7 @@ func main() {
 	err = client.Ping(ctx, readpref.Primary())
 	if err != nil {
 		fmt.Println("Ping error")
-		log.Fatal(err)
+		panic(err)
 	}
 	// databases, err := client.ListDatabaseNames(ctx, bson.M{})
 	// if err != nil {
@@ -62,37 +97,30 @@ func main() {
 
 	//Establishing handles
 	quickstartDatabase := client.Database("quickstart")
-	podcastsCollection := quickstartDatabase.Collection("podcasts")
+	// podcastsCollection := quickstartDatabase.Collection("podcasts")
 	episodesCollection := quickstartDatabase.Collection("episodes")
 
-	//Insert document to podcasts Collection
-	podcastResult, err := podcastsCollection.InsertOne(ctx, bson.D{
-		{Key: "title", Value: "Some MongoDB Podcast"},
-		{Key: "author", Value: "This Guy"},
-		{Key: "tags", Value: bson.A{"development", "programming", "coding"}},
-	})
+	cursor, err := episodesCollection.Find(ctx, bson.M{})
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(podcastResult.InsertedID)
 
-	//Insert multiple documents
-	episodeResult, err := episodesCollection.InsertMany(ctx, []interface{}{
-		bson.D{
-			{"podcast", podcastResult.InsertedID},
-			{"title", "Episode 1"},
-			{"description", "The first ep."},
-			{"duration", 25},
-		},
-		bson.D{
-			{"podcast", podcastResult.InsertedID},
-			{"title", "Episode 2"},
-			{"description", "The second ep."},
-			{"duration", 30},
-		},
-	})
-	if err != nil {
-		log.Fatal(err)
+	// **Load all documents into memory
+	// var episodes []bson.M
+	// if err = cursor.All(ctx, &episodes); err != nil {
+	// 	log.Fatal(err)
+	// }
+	// for _, episode := range episodes {
+	// 	fmt.Println(episode)
+	// }
+
+	// **Load documents by batches with Next
+	defer cursor.Close(ctx)
+	for cursor.Next(ctx) {
+		var episode bson.M
+		if err = cursor.Decode(&episode); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(episode)
 	}
-	fmt.Println(episodeResult.InsertedIDs)
 }
