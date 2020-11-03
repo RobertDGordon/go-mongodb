@@ -53,10 +53,22 @@ func main() {
 		fmt.Println("Ping error")
 		log.Fatal(err)
 	}
-	databases, err := client.ListDatabaseNames(ctx, bson.M{})
+	// databases, err := client.ListDatabaseNames(ctx, bson.M{})
+	// if err != nil {
+	// 	fmt.Println("Database error")
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println(databases)
+	quickstartDatabase := client.Database("quickstart")
+	podcastsCollection := quickstartDatabase.Collection("podcasts")
+	// episodesCollection := quickstartDatabase.Collection("episodes")
+
+	podcastResult, err := podcastsCollection.InsertOne(ctx, bson.D{
+		{Key: "title", Value: "Some MongoDB Podcast"},
+		{Key: "author", Value: "This Guy"},
+	})
 	if err != nil {
-		fmt.Println("Database error")
 		log.Fatal(err)
 	}
-	fmt.Println(databases)
+	fmt.Println(podcastResult.InsertedID)
 }
