@@ -177,4 +177,16 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
+
+	results, err := podcastsCollection.UpdateMany(
+		ctx,
+		bson.M{"title": "Some MongoDB Podcast"},
+		bson.D{
+			{"$set", bson.D{{"author", "Dude"}}},
+		},
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Updated %v Documents!\n", results.ModifiedCount)
 }
