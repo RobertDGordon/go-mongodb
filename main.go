@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -60,6 +59,67 @@ func LoadEnv(key string) string {
 // 	fmt.Println(episodeResult.InsertedIDs)
 // }
 
+// Use cursors to retrieve documents
+// func cursors() {
+// 	// ** Use cursors to find documents
+// 	cursor, err := episodesCollection.Find(ctx, bson.M{})
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+
+// 	// **Load all documents into memory
+// 	// var episodes []bson.M
+// 	// if err = cursor.All(ctx, &episodes); err != nil {
+// 	// 	log.Fatal(err)
+// 	// }
+// 	// for _, episode := range episodes {
+// 	// 	fmt.Println(episode)
+// 	// }
+
+// 	// **Load documents by batches with Next
+// 	defer cursor.Close(ctx)
+// 	for cursor.Next(ctx) {
+// 		var episode bson.M
+// 		if err = cursor.Decode(&episode); err != nil {
+// 			log.Fatal(err)
+// 		}
+// 		// fmt.Println(episode)
+// 	}
+
+// 	// ** Find document (first?)
+// 	var podcast bson.M
+// 	if err = podcastsCollection.FindOne(ctx, bson.M{}).Decode(&podcast); err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	// fmt.Println(podcast)
+
+// 	// ** Find document by filter (bson.M)
+// 	filterCursor, err := episodesCollection.Find(ctx, bson.M{"duration": 30})
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+
+// 	var episodesFiltered []bson.M
+// 	if err = filterCursor.All(ctx, &episodesFiltered); err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	// fmt.Println(episodesFiltered)
+
+// 	// ** Find document by sort and range
+// 	opts := options.Find()
+// 	opts.SetSort(bson.D{{"duration", 1}}) // -1 descending, 1 ascending
+// 	sortCursor, err := episodesCollection.Find(ctx, bson.D{
+// 		{"duration", bson.D{
+// 			{"$gt", 24},
+// 		}},
+// 	}, opts)
+// 	var episodesSorted []bson.M
+// 	if err = sortCursor.All(ctx, &episodesSorted); err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	fmt.Println(episodesSorted)
+// }
+
 func main() {
 	fmt.Println("Starting server...")
 
@@ -98,62 +158,6 @@ func main() {
 	//Establishing handles
 	quickstartDatabase := client.Database("quickstart")
 	podcastsCollection := quickstartDatabase.Collection("podcasts")
-	episodesCollection := quickstartDatabase.Collection("episodes")
+	// episodesCollection := quickstartDatabase.Collection("episodes")
 
-	cursor, err := episodesCollection.Find(ctx, bson.M{})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// **Load all documents into memory
-	// var episodes []bson.M
-	// if err = cursor.All(ctx, &episodes); err != nil {
-	// 	log.Fatal(err)
-	// }
-	// for _, episode := range episodes {
-	// 	fmt.Println(episode)
-	// }
-
-	// **Load documents by batches with Next
-	defer cursor.Close(ctx)
-	for cursor.Next(ctx) {
-		var episode bson.M
-		if err = cursor.Decode(&episode); err != nil {
-			log.Fatal(err)
-		}
-		// fmt.Println(episode)
-	}
-
-	// ** Find document (first?)
-	var podcast bson.M
-	if err = podcastsCollection.FindOne(ctx, bson.M{}).Decode(&podcast); err != nil {
-		log.Fatal(err)
-	}
-	// fmt.Println(podcast)
-
-	// ** Find document by filter (bson.M)
-	filterCursor, err := episodesCollection.Find(ctx, bson.M{"duration": 30})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var episodesFiltered []bson.M
-	if err = filterCursor.All(ctx, &episodesFiltered); err != nil {
-		log.Fatal(err)
-	}
-	// fmt.Println(episodesFiltered)
-
-	// ** Find document by sort and range
-	opts := options.Find()
-	opts.SetSort(bson.D{{"duration", 1}}) // -1 descending, 1 ascending
-	sortCursor, err := episodesCollection.Find(ctx, bson.D{
-		{"duration", bson.D{
-			{"$gt", 24},
-		}},
-	}, opts)
-	var episodesSorted []bson.M
-	if err = sortCursor.All(ctx, &episodesSorted); err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(episodesSorted)
 }
