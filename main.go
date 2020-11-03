@@ -59,10 +59,13 @@ func main() {
 	// 	log.Fatal(err)
 	// }
 	// fmt.Println(databases)
+
+	//Establishing handles
 	quickstartDatabase := client.Database("quickstart")
 	podcastsCollection := quickstartDatabase.Collection("podcasts")
 	episodesCollection := quickstartDatabase.Collection("episodes")
 
+	//Insert document to podcasts Collection
 	podcastResult, err := podcastsCollection.InsertOne(ctx, bson.D{
 		{Key: "title", Value: "Some MongoDB Podcast"},
 		{Key: "author", Value: "This Guy"},
@@ -73,6 +76,7 @@ func main() {
 	}
 	fmt.Println(podcastResult.InsertedID)
 
+	//Insert multiple documents
 	episodeResult, err := episodesCollection.InsertMany(ctx, []interface{}{
 		bson.D{
 			{"podcast", podcastResult.InsertedID},
