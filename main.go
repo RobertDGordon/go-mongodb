@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -200,8 +199,8 @@ func main() {
 
 	//Establishing handles
 	quickstartDatabase := client.Database("quickstart")
-	// podcastsCollection := quickstartDatabase.Collection("podcasts")
-	episodesCollection := quickstartDatabase.Collection("episodes")
+	podcastsCollection := quickstartDatabase.Collection("podcasts")
+	// episodesCollection := quickstartDatabase.Collection("episodes")
 
 	// ** Delete documents
 	// result, err := episodesCollection.DeleteOne(ctx, bson.M{"duration": 25})
@@ -211,9 +210,15 @@ func main() {
 	// fmt.Printf("DeleteOne removed %v documents\n", result.DeletedCount)
 
 	// ** Delete ALL documents matching filter
-	result, err := episodesCollection.DeleteMany(ctx, bson.M{"duration": 30})
-	if err != nil {
+	// result, err := episodesCollection.DeleteMany(ctx, bson.M{"duration": 30})
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Printf("DeleteOne removed %v documents\n", result.DeletedCount)
+
+	// ** Delete entire collection
+
+	if err = podcastsCollection.Drop(ctx); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("DeleteOne removed %v documents\n", result.DeletedCount)
 }
