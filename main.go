@@ -204,7 +204,14 @@ func main() {
 	episodesCollection := quickstartDatabase.Collection("episodes")
 
 	// ** Delete documents
-	result, err := episodesCollection.DeleteOne(ctx, bson.M{"duration": 25})
+	// result, err := episodesCollection.DeleteOne(ctx, bson.M{"duration": 25})
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Printf("DeleteOne removed %v documents\n", result.DeletedCount)
+
+	// ** Delete ALL documents matching filter
+	result, err := episodesCollection.DeleteMany(ctx, bson.M{"duration": 30})
 	if err != nil {
 		log.Fatal(err)
 	}
