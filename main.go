@@ -1,6 +1,7 @@
 package main
 
 import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"context"
 	"fmt"
 	"log"
@@ -12,6 +13,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
+
+type Podcast struct {
+	ID primitive.ObjectID `bson:"_id,omitempty"`
+	Name string `bson:"name,omitempty"`
+	Author string `bson:"author,omitempty"`
+	Tags [string] `bson:"tags,omitempty"`
+}
 
 //LoadEnv loads variables from .env
 func LoadEnv(key string) string {
