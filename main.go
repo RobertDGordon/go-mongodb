@@ -36,10 +36,11 @@ func main() {
 	fmt.Printf("Connecting to: %s \n", dbname)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	if cancel != nil {
-		fmt.Println("Ctx:", cancel)
-		// log.Fatal(cancel) //Do not error out
-	}
+	defer cancel()
+	// if cancel != nil {
+	// 	fmt.Println("Ctx:", cancel)
+	// 	// log.Fatal(cancel) //Do not error out
+	// }
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb+srv://"+username+":"+password+"@cluster0.ing9e.mongodb.net/"+dbname+"?retryWrites=true&w=majority"))
 	err = client.Connect(ctx)
 	if err != nil {
