@@ -120,8 +120,8 @@ func LoadEnv(key string) string {
 // 	fmt.Println(episodesSorted)
 // }
 
-// Update and Delete operations
-// func UpdateDelete() {
+// Update operations
+// func Update() {
 // 	// ** Update documents by id
 // 	id, _ := primitive.ObjectIDFromHex("5fa0fd1b444827cf354d8973")
 
@@ -160,6 +160,28 @@ func LoadEnv(key string) string {
 // 		},
 // 	)
 // 	fmt.Printf("Updated %v Documents!\n", resultReplace.ModifiedCount)
+// }
+
+// Delete operations
+// func Delete () {
+// 	// ** Delete documents
+// 	// result, err := episodesCollection.DeleteOne(ctx, bson.M{"duration": 25})
+// 	// if err != nil {
+// 	// 	log.Fatal(err)
+// 	// }
+// 	// fmt.Printf("DeleteOne removed %v documents\n", result.DeletedCount)
+
+// 	// ** Delete ALL documents matching filter
+// 	// result, err := episodesCollection.DeleteMany(ctx, bson.M{"duration": 30})
+// 	// if err != nil {
+// 	// 	log.Fatal(err)
+// 	// }
+// 	// fmt.Printf("DeleteOne removed %v documents\n", result.DeletedCount)
+
+// 	// ** Delete entire collection
+// 	// if err = podcastsCollection.Drop(ctx); err != nil {
+// 	// 	log.Fatal(err)
+// 	// }
 // }
 
 func main() {
@@ -202,23 +224,4 @@ func main() {
 	podcastsCollection := quickstartDatabase.Collection("podcasts")
 	// episodesCollection := quickstartDatabase.Collection("episodes")
 
-	// ** Delete documents
-	// result, err := episodesCollection.DeleteOne(ctx, bson.M{"duration": 25})
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// fmt.Printf("DeleteOne removed %v documents\n", result.DeletedCount)
-
-	// ** Delete ALL documents matching filter
-	// result, err := episodesCollection.DeleteMany(ctx, bson.M{"duration": 30})
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// fmt.Printf("DeleteOne removed %v documents\n", result.DeletedCount)
-
-	// ** Delete entire collection
-
-	if err = podcastsCollection.Drop(ctx); err != nil {
-		log.Fatal(err)
-	}
 }
