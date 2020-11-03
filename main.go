@@ -1,12 +1,14 @@
 package main
 
 import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"context"
 	"fmt"
 	"log"
 	"os"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -15,10 +17,18 @@ import (
 )
 
 type Podcast struct {
-	ID primitive.ObjectID `bson:"_id,omitempty"`
-	Name string `bson:"name,omitempty"`
-	Author string `bson:"author,omitempty"`
-	Tags [string] `bson:"tags,omitempty"`
+	ID     primitive.ObjectID `bson:"_id,omitempty"`
+	Name   string             `bson:"name,omitempty"`
+	Author string             `bson:"author,omitempty"`
+	Tags   []string           `bson:"tags,omitempty"`
+}
+
+type Episode struct {
+	ID          primitive.ObjectID `bson:"_id,omitempty"`
+	Podcast     primitive.ObjectID `bson:"podcast,omitempty"`
+	Title       string             `bson:"title,omitempty"`
+	Description string             `bson:"description,omitempty"`
+	Duration    int32              `bson:"duration,omitempty"`
 }
 
 //LoadEnv loads variables from .env
@@ -230,6 +240,26 @@ func main() {
 	//Establishing handles
 	quickstartDatabase := client.Database("quickstart")
 	podcastsCollection := quickstartDatabase.Collection("podcasts")
-	// episodesCollection := quickstartDatabase.Collection("episodes")
+	episodesCollection := quickstartDatabase.Collection("episodes")
+
+	var podcasts []Podcast
+	podcastCursor, err := podcastsCollection.Find(ctx, bson.M{})
+	if err != nil {
+		panic(err)
+	}
+	if err = podcastCursor.All(ctx, &podcasts); err != nil {
+		panic(err)
+	}
+	fmt.Println(podcasts)
+
+	var episodes []Episode
+	episodeCursor, err := episodesCollection.Find(ctx, bson.M{})
+	if err != nil {
+		panic(err)
+	}
+	if err = episodeCursor.All(ctx, &episodes); err != nil {
+		panic(err)
+	}
+	fmt.Println(episodes[0].Title)
 
 }
