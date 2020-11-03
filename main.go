@@ -163,7 +163,7 @@ func main() {
 	podcastsCollection := quickstartDatabase.Collection("podcasts")
 	// episodesCollection := quickstartDatabase.Collection("episodes")
 
-	// ** Update documents
+	// ** Update documents by id
 	id, _ := primitive.ObjectIDFromHex("5fa0fd1b444827cf354d8973")
 
 	result, err := podcastsCollection.UpdateOne(
@@ -178,6 +178,7 @@ func main() {
 	}
 	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
 
+	// ** Update documents by filter match
 	results, err := podcastsCollection.UpdateMany(
 		ctx,
 		bson.M{"title": "Some MongoDB Podcast"},
@@ -189,4 +190,15 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Printf("Updated %v Documents!\n", results.ModifiedCount)
+
+	// ** Replace by filter
+	resultReplace, err := podcastsCollection.ReplaceOne(
+		ctx,
+		bson.M{"author": "Dude"},
+		bson.M{
+			"title":  "The Updated Podcast",
+			"author": "Some Dude",
+		},
+	)
+	fmt.Printf("Updated %v Documents!\n", resultReplace.ModifiedCount)
 }
