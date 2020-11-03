@@ -7,6 +7,9 @@ import (
 	"os"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -160,4 +163,18 @@ func main() {
 	podcastsCollection := quickstartDatabase.Collection("podcasts")
 	// episodesCollection := quickstartDatabase.Collection("episodes")
 
+	// ** Update documents
+	id, _ := primitive.ObjectIDFromHex("5fa0fd1b444827cf354d8973")
+
+	result, err := podcastsCollection.UpdateOne(
+		ctx,
+		bson.M{"_id": id},
+		bson.D{
+			{"$set", bson.D{{"author", "That Guy"}}},
+		},
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
 }
