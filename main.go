@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -200,6 +201,12 @@ func main() {
 	//Establishing handles
 	quickstartDatabase := client.Database("quickstart")
 	// podcastsCollection := quickstartDatabase.Collection("podcasts")
-	// episodesCollection := quickstartDatabase.Collection("episodes")
+	episodesCollection := quickstartDatabase.Collection("episodes")
 
+	// ** Delete documents
+	result, err := episodesCollection.DeleteOne(ctx, bson.M{"duration": 25})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("DeleteOne removed %v documents\n", result.DeletedCount)
 }
